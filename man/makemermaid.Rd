@@ -11,12 +11,14 @@ makemermaid(.object., ..., file)
 
 \item{...}{name=value pairs that makes values replace \code{{{name}}} elements in the markup}
 
-\item{file}{name of file to hold \code{mermaid} markup after variable insertions.  Run this in Quarto using a chunk to looks like the following, which was for \code{file='mermaid1.mer'}.\preformatted{```\{mermaid\}
+\item{file}{name of file to hold \code{mermaid} markup after variable insertions.  Run this in Quarto using a chunk to looks like the following, which was for \code{file='mermaid1.mer'}.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{mermaid\}
 \%\%| fig-cap: "Consort diagram produced by `mermaid`"
 \%\%| label: fig-mermaid1
 \%\%| file: mermaid1.mer
 ```
-}}
+}\if{html}{\out{</div>}}}
 }
 \value{
 nothing; used to \code{knitr::knit_expand()} mermaid markup
@@ -25,7 +27,7 @@ nothing; used to \code{knitr::knit_expand()} mermaid markup
 Create a Quarto Mermaid Diagram Chunk With Variable Insertions
 }
 \details{
-Takes a character string or vector and uses \code{\link[knitr:knit_expand]{knitr::knit_expand()}} to apply variable insertions before the diagram is rendered by Quarto.  See \href{http://hbiostat.org/rflow/doverview.html#fig-mermaid1}{this} for an example.
+Takes a character string or vector and uses \code{\link[knitr:knit_expand]{knitr::knit_expand()}} to apply variable insertions before the diagram is rendered by Quarto.  See \href{https://hbiostat.org/rflow/doverview.html#fig-mermaid1/}{this} for an example.
 }
 \seealso{
 \code{\link[=makegraphviz]{makegraphviz()}}

@@ -62,7 +62,7 @@ kabl <- function(..., caption=NULL, digits=4, col.names=NA, row.names=NA) {
 ##' Creates text strings suitable for running through `knitr`.  The chunk is given a random name because certain operations are not allowed by `knitr` without it.
 ##' @title makecodechunk
 ##' @param cmd character string vector of commands to run inside chunk
-##' @param opts optional list of chunk options, e.g. `list(fig.width=6, fig.cap="This is a caption")`.  See <https://yihui.org/knitr/options> for a complete list of options.
+##' @param opts optional list of chunk options, e.g. `list(fig.width=6, fig.cap="This is a caption")`.  See <https://yihui.org/knitr/options/> for a complete list of options.
 ##' @param results format of results, default is `'asis'`.  May specify `results='markup'`.
 ##' @param lang language for the chunk
 ##' @param callout an optional Quarto callout to include after `#|` after the chunk header that affects how the result appears, e.g. `callout='column: margin'`
@@ -229,13 +229,14 @@ makecolmarg <- function(x, type=c('print', 'run', 'cat'), ...) {
 ##' Make Quarto Tabs
 ##'
 ##' Loops through a series of formulas or elements of a named list and outputs each element into
-##' a separate `Quarto` tab.  A `wide` argument is used to expand the width
+##' a separate `Quarto` tab.  `wide` and `column` arguments are used to expand the width
 ##' of the output outside the usual margins.  An `initblank` argument
 ##' creates a first tab that is empty, or you can specify a formula `` `` ~ `` ``.  This allows one to show nothing
 ##' until one of the other tabs is clicked.  Multiple commands can be run in one chunk by including multiple right hand terms in a formula.  A chunk can be marked for producing raw output by including a term `raw` somewhere in the formula's right side.  If can be marked for constructing a label and caption by including `+ caption(caption string, label string)`.  The tab number is appended to the label string, and if the label is not provided `baselabel` will be used.
 ##' @title maketabs
 ##' @param ... a series of formulas or a single named list.  For formulas the left side is the tab label (if multiple words or other illegal R expressions enclose in backticks) and the right hand side has expressions to evaluate during chunk execution, plus optional `raw`, `caption`, and `fig.size` options.
 ##' @param wide set to `TRUE` to use a Quarto `column-page` for the body of the text to allow it to use some of the margins
+##' @param cwidth specify a legal `Quarto` character string instead of `wide` to specify the width of the output.  These are defined [here](https://quarto.org/docs/authoring/article-layout.html#options-reference/).  Commonly used values are `'column-screen-right'`, `'column-page-left'`, `'column-screen-inset-shaded'`. 
 ##' @param initblank set to `TRUE` to create a first tab that is blank so that the report will not initially show any tabbed material
 ##' @param baselabel a one-word character string that provides the base name of `label`s for tabs with figure captions.  The sequential tab number is appended to `baselabel` to obtain the full figure label.  If using formulas the figure label may instead come from `caption(.., label)`. If not specified it is taken to be the name of the current chunk with `fig-` prepended.
 ##' @param cap applies to the non-formula use of `maketabs` and is an integer vector specifying which tabs are to be given figure labels and captions.
@@ -247,8 +248,9 @@ makecolmarg <- function(x, type=c('print', 'run', 'cat'), ...) {
 ##' @examples
 ##' X <- list(A=data.frame(x=1:2), B=data.frame(x=1:2, y=11:12))
 ##' maketabs(X)
-# See https://stackoverflow.com/questions/42631642
-maketabs <- function(..., wide=FALSE, initblank=FALSE,
+# See https://stackoverflow.com/questions/42631642/
+maketabs <- function(..., wide=FALSE, cwidth=if(wide) 'column-page',
+                     initblank=FALSE,
                      baselabel=NULL, cap=NULL, basecap=NULL, debug=FALSE) {
 
   ## Put caption() and fig.size() in parent environment so they can
@@ -276,7 +278,8 @@ maketabs <- function(..., wide=FALSE, initblank=FALSE,
   if(length(baselabel) && ! grepl('^fig-', baselabel))
       baselabel <- paste0('fig-', baselabel)
   
-    yaml   <- paste0('.panel-tabset', if(wide) ' .column-page')
+  yaml   <- paste0('.panel-tabset',
+                   if(length(cwidth)) paste0(' .', cwidth))
 
     k <- c('', paste0('::: {', yaml, '}'), '')
     if(initblank) k <- c(k, '', '##   ', '')
@@ -425,7 +428,7 @@ htmlViewx <- function(..., tab=c('notfirst', 'all', 'none')) {
 ##'
 ##' Function to run various data checks on a data table.
 ##'
-##' Checks are run separately for each part of the `expression` vector `checks`.  For each single expression, the variables listed in the output are all the variables mentioned in the expression plus optional variables whose names are in the character vector `id`. `%between% c(a,b)` in expressions is printed as `[a,b]`.  The output format is plain text unless `html=TRUE` which also puts each table in a separate Quarto tab.  See [here](https://www.fharrell.com/post/rflow) for examples.
+##' Checks are run separately for each part of the `expression` vector `checks`.  For each single expression, the variables listed in the output are all the variables mentioned in the expression plus optional variables whose names are in the character vector `id`. `%between% c(a,b)` in expressions is printed as `[a,b]`.  The output format is plain text unless `html=TRUE` which also puts each table in a separate Quarto tab.  See [here](https://www.fharrell.com/post/rflow/) for examples.
 ##' @title dataChk
 ##' @param d a data table
 ##' @param checks a vector of expressions that if satisfied causes records to be listed
@@ -541,7 +544,7 @@ scplot <- function(command, cap=NULL, scap=NULL, w=5, h=4, id=NULL) {
 
 ##' Produce a Report Section Detailing Missing Values in a Dataset
 ##'
-##' Quantifies frequencies of missing observations on a variable and missing variables on an observaton and produces variables tables and (depending on the number of `NA`s) multiple graphic displays in Quarto tabs.  The results are best understood by referring to [this](http://hbiostat.org/rflow/case.html#missing-data).
+##' Quantifies frequencies of missing observations on a variable and missing variables on an observaton and produces variables tables and (depending on the number of `NA`s) multiple graphic displays in Quarto tabs.  The results are best understood by referring to [this](https://hbiostat.org/rflow/case.html#missing-data/).
 ##' @title missChk
 ##' @param data data frame or table to analyze
 ##' @param use a formula or character vector specifying which variables to consider if not all those in `data`
@@ -819,7 +822,7 @@ asForm  <- function(x) as.formula(paste('~', paste(x, collapse=' + ')))
 
 ##' Create a Quarto Mermaid Diagram Chunk With Variable Insertions
 ##'
-##' Takes a character string or vector and uses [knitr::knit_expand()] to apply variable insertions before the diagram is rendered by Quarto.  See [this](http://hbiostat.org/rflow/doverview.html#fig-mermaid1) for an example.
+##' Takes a character string or vector and uses [knitr::knit_expand()] to apply variable insertions before the diagram is rendered by Quarto.  See [this](https://hbiostat.org/rflow/doverview.html#fig-mermaid1/) for an example.
 ##' @title makemermaid
 ##' @param .object. character string or vector with `mermaid` markup
 ##' @param ... name=value pairs that makes values replace `{{name}}` elements in the markup
@@ -846,7 +849,7 @@ makemermaid <- function(.object., ..., file) {
 
 ##' Create a Quarto Graphviz dot Diagram Chunk With Variable Insertions
 ##'
-##' Takes a character string or vector and uses [knitr::knit_expand()] to apply variable insertions before the diagram is rendered by Quarto.  See [this](http://hbiostat.org/rflow/doverview.html#sec-doverview-filter) for an example.  Unlike `mermaid`, `graphviz` can include user-defined linkages to specific parts of a node (e.g., a single word in a line of text) to another part of the chart, and can render tables.  If an inclusion is `...` is a data frame or table, it will be properly rendered inside the diagram.
+##' Takes a character string or vector and uses [knitr::knit_expand()] to apply variable insertions before the diagram is rendered by Quarto.  See [this](https://hbiostat.org/rflow/doverview.html#sec-doverview-filter/) for an example.  Unlike `mermaid`, `graphviz` can include user-defined linkages to specific parts of a node (e.g., a single word in a line of text) to another part of the chart, and can render tables.  If an inclusion is `...` is a data frame or table, it will be properly rendered inside the diagram.
 ##' @title makegraphviz
 ##' @param .object. character string or vector with `graphviz` markup
 ##' @param ... name=value pairs that makes values replace `{{name}}` elements in the markup
@@ -902,66 +905,122 @@ makegraphviz <- function(.object., ..., file) {
 
 ##' Make Variable Clustering Quarto Report Section
 ##'
-##' Draws a variable clustering dendrogram and optionally graphically depicts a correlation matrix.  See [this](http://hbiostat.org/rflow/descript.html#describing-variable-interrelationships) for an example.  Uses [Hmisc::varclus()].
+##' Draws a variable clustering dendrogram and optionally graphically depicts a correlation matrix.  See [this](https://hbiostat.org/rflow/descript.html#describing-variable-interrelationships/) for an example.  Uses [Hmisc::varclus()].
 ##' @title cClus
 ##' @param d a data frame or table
 ##' @param exclude formula or vector of character strings containing variables to exclude from analysis
 ##' @param corrmatrix set to `TRUE` to use [Hmisc::plotCorrM()] to depict a Spearman rank correlation matrix.
+##' @param redundancy set to `TRUE` to run [Hmisc::redun()] on non-excluded variables
+##' @param spc set to `TRUE` to run [Hmisc::princmp()] to do a sparse principal component analysis with the argument `method='sparse'` passed
+##' @param trans set to `TRUE` to run [Hmisc::transace()] to transform each predictor before running redundancy or principal components analysis. `transace` is run on the stacked filled-in data if `imputed` is given.
+##' @param rexclude extra variables to exclude from `transace` transformating-finding, redundancy analysis, and sparce principal components (formula or character vector)
 ##' @param fracmiss if the fraction of `NA`s for a variable exceeds this the variable will not be included
 ##' @param maxlevels if the maximum number of distinct values for a categorical variable exceeds this, the variable will be dropped
 ##' @param minprev the minimum proportion of non-missing observations in a category for a binary variable to be retained, and the minimum relative frequency of a category before it will be combined with other small categories
+##' @param imputed an object created by [Hmisc::aregImpute()] or [mice::mice()] that contains information from multiple imputation that causes `vClus` to create all the filled-in datasets, stack them into one tall dataset, and pass that dataset to [Hmisc::redun()] or [Hmisc::princmp()] so that `NA`s can be handled efficiently in redundancy analysis and sparse principal components, i.e., without excluding partial records.  Variable clustering and the correlation matrix are already efficient because they use pairwise deletion of `NA`s.
 ##' @param horiz set to `TRUE` to draw the dendrogram horizontally
 ##' @param label figure label for Quarto
 ##' @param print set to `FALSE` to not let `dataframeReduce` report details
-##' @return nothing; makes Quarto tabs
-##' @seealso [Hmisc::varclus()], [Hmisc::plotCorrM()], [Hmisc::dataframeReduce()]
+##' @param redunargs a `list()` of other arguments passed to [Hmisc::redun()]
+##' @param spcargs a `list()` of other arguments passed to [Hmisc::princmp()]
+##' @param transaceargs a `list()` of other arguments passed to [Hmisc::transace()]
+##' @param spcfile a character string specifying an `.rds` R binary file to hold the results of sparse principal component analysis.  Using [Hmisc::runifChanged()], if the file name is specified and no inputs have changed since the last run, the result is read from the file.  Otherwise a new run is made and the file is recreated if `spcfile` is specified.  This is done because sparse principal components can take several minutes to run on large files.
+##' @param transacefile similar to `spcfile` and can be used when `trans=TRUE`
+##' @return makes Quarto tabs and prints output, returning nothing unless `spc=TRUE` or `trans=TRUE` are used, in which case a list with components `princmp` and/or `transace` is returned and these components can be passed to special `print` and `plot` methods for `spc` or to `ggplot_transace`.  The user can put scree plots and PC loading plots in separate code chunks that use different figure sizes that way.
+##' @seealso [Hmisc::varclus()], [Hmisc::plotCorrM()], [Hmisc::dataframeReduce()], [Hmisc::redun()], [Hmisc::princmp()], [Hmisc::transace()]
 ##' @author Frank Harrell
 ##' @md
 ##' @examples
 ##' \dontrun{
 ##' vClus(mydata, exclude=.q(country, city))
 ##' }
-vClus <- function(d, exclude=NULL, corrmatrix=FALSE,
-                  fracmiss=0.2, maxlevels=10, minprev=0.05,
-                  horiz=FALSE, label='fig-varclus', print=TRUE) {
+vClus <- function(d, exclude=NULL, corrmatrix=FALSE, redundancy=FALSE,
+                  spc=FALSE, trans=FALSE, rexclude=NULL,
+                  fracmiss=0.2, maxlevels=10, minprev=0.05, imputed=NULL,
+                  horiz=FALSE, label='fig-varclus', print=TRUE,
+                  redunargs=NULL, spcargs=NULL, transaceargs=NULL,
+                  transacefile=NULL, spcfile=NULL) {
+
   w <- as.data.frame(d)  # needed by dataframeReduce
   if(length(exclude)) {
     if(! is.character(exclude)) exclude <- all.vars(exclude)
     w <- w[setdiff(names(w), exclude)]
-    }
+  }
+  if(length(rexclude) && ! is.character(rexclude))
+    rexclude <- all.vars(rexclude)
+  
   w <- dataframeReduce(w, fracmiss=fracmiss, maxlevels=maxlevels,
                        minprev=minprev, print=FALSE)
-  if(print) print(kabl(attr(w, 'info'),
-                       caption='Variables removed or modified'))
+  rinfo <- attr(w, 'info')
+  if(print && length(rinfo))
+    print(kabl(attr(w, 'info'),
+               caption='Variables removed or modified'))
   
   form <- as.formula(paste('~', paste(names(w), collapse=' + ')))
   v <- varclus(form, data=w)
   if(! corrmatrix) {
     if(horiz) plot(as.dendrogram(v$hclust), horiz=TRUE)
     else plot(v)
-    return()
   }
-  ge <- .GlobalEnv
-  assign('.varclus.', v, envir=ge)
-  rho <- varclus(form, data=w, trans='none')$sim
-  assign('.varclus.gg.', plotCorrM(rho, xangle=90)[[1]], envir=ge)
-  cap <- 'Spearman rank correlation matrix.  Positive correlations are blue and negative are red.'
-  form1 <- `Correlation Matrix` ~ .varclus.gg. + caption(cap, label=label) +
-    fig.size(width=9.25, height=8.5)
-  form2 <- `Variable Clustering` ~
-    plot(as.dendrogram(.varclus.$hclus), horiz=TRUE) +
-    fig.size(height=4.5, width=7.5)
-  form3 <- `Variable Clustering` ~ plot(.varclus.) +
-    fig.size(height=5.5, width=7.5)
-  if(horiz) maketabs(form1, form2, initblank=TRUE)
-else
-            maketabs(form1, form3, initblank=TRUE)
+  if(corrmatrix) {
+    ge <- .GlobalEnv
+    assign('.varclus.', v, envir=ge)
+    rho <- varclus(form, data=w, trans='none')$sim
+    assign('.varclus.gg.', plotCorrM(rho, xangle=90)[[1]], envir=ge)
+    cap <- 'Spearman rank correlation matrix.  Positive correlations are blue and negative are red.'
+    form1 <- `Correlation Matrix` ~ .varclus.gg. + caption(cap, label=label) +
+      fig.size(width=9.25, height=8.5)
+    form2 <- `Variable Clustering` ~
+      plot(as.dendrogram(.varclus.$hclus), horiz=TRUE) +
+      fig.size(height=4.5, width=7.5)
+    form3 <- `Variable Clustering` ~ plot(.varclus.) +
+      fig.size(height=5.5, width=7.5)
+    if(horiz) maketabs(form1, form2, initblank=TRUE)
+    else
+      maketabs(form1, form3, initblank=TRUE)
+    }
+  
+  if(trans | redundancy | spc) {
+    formr <- as.formula(paste('~', paste(setdiff(names(w), rexclude),
+                                         collapse=' + ')))
+    if(length(imputed)) w <- do.call(rbind, completer(imputed, mydata=d))
+  }
+
+  R <- list()
+  
+  if(trans) {
+    args <- c(list(formr, data=w), transaceargs)
+    if(! length(transacefile)) z <- do.call(transace, args)
+    else {
+      g <- function() do.call(transace, args)
+      z <- runifChanged(g, args, file=transacefile)
+      }
+    R$transace <- z
+    formr      <- z$transformed
+    w          <- NULL
+  }
+  
+  if(redundancy) {
+    red <- do.call(redun, c(list(formr, data=w), redunargs))
+    cat(htmlVerbatim(red), sep='\n')
+  }
+  
+  if(spc) {
+    args <- c(list(formr, data=w, method='sparse'), spcargs)
+    if(! length(spcfile)) p <- do.call(princmp, args)
+    else {
+      g <- function() do.call(princmp, args)
+      p <- runifChanged(g, args, file=spcfile)
+    }
+    R$princmp <- p
+  }
+  invisible(R)
 }
 
 
 ##' Produce a Data Overview Quarto Section
 ##'
-##' Produces a multi-tabbed dataset overview as exemplified [here](http://hbiostat.org/rflow/doverview.html#sec-doverview-data).  This includes provision of data about data such as variable type, symmetry, missingness, rarest and most common values.
+##' Produces a multi-tabbed dataset overview as exemplified [here](https://hbiostat.org/rflow/doverview.html#sec-doverview-data/).  This includes provision of data about data such as variable type, symmetry, missingness, rarest and most common values.
 ##' @title dataOverview
 ##' @param d a data frame or table
 ##' @param d2 optional second dataset used for analyzing uniqueness of subject IDs
@@ -1147,7 +1206,8 @@ dataOverview <- function(d, d2=NULL, id=NULL,
                    'observations\nNumber of NAs is color coded')
       lnna <- levels(data$.nna.)
       ggplotlyr(
-        if(any(trimws(as.character(data$.nna.)) != '0'))
+        if(any(trimws(as.character(data$.nna.)) != '0') &&
+           length(unique(as.integer(data$.nna.))) > 1)
           ggplot(data, aes(x=distinct, y=symmetry,
                        color=as.integer(.nna.), label=txt)) +
           scale_x_continuous(trans='sqrt', breaks=br, 
@@ -1438,9 +1498,10 @@ rwrap <- function(x) paste0('\\`r ', x, '\\`')
 ##' @return invisibly, the result of the expression
 ##' @author Frank Harrell
 ##' @md
+##' @seealso [hooktime()]
 ##' @examples
 ##' \dontrun{
-##' g <- function(...){}  # define a function to runs slowly
+##' g <- function(...){}  # define a function to run slowly
 ##' result <- timeMar(g())
 ##' }
 timeMar <- function(x) {
@@ -1455,10 +1516,36 @@ timeMar <- function(x) {
   invisible(.res.)
 }
 
+##' Create knitr Hook for Reporting Execution Time for Chunks
+##'
+##' Creates a hook called `time` that can be activated by including `time=TRUE` in a chunk header.  The chunk's execution time in seconds will be printed in a very small html font at the end of the chunk's output.
+##' @title hooktime
+##' @param all set to `TRUE` to time every chunk without the need for `time=TRUE` in the chunk header
+##' @return nothing
+##' @seealso [this](https://bookdown.org/yihui/rmarkdown-cookbook/time-chunk.html/) and [timeMar()]
+##' @author Frank Harrell
+##' @md
+hooktime <- function(all=FALSE) {
+  timeit <- function(before, options, envir) {
+    if(before) {
+      ge <- .GlobalEnv
+      assign('.start.time', Sys.time(), envir=ge)
+    }
+    else {
+      et <- paste0(round(as.numeric(Sys.time() - .start.time), 3), 's')
+      paste0('<span style="font-size:64%">Execution time: ', et, '</span>')
+    }
+  }
+  knitr::knit_hooks$set(time=timeit)
+  if(all) knitr::opts_chunk$set(time=TRUE)
+  invisible()
+}
+
+  
 ##' Apply Derived Variable Specifications
 ##' 
 ##' Function to apply derived variable specifications derv to a data table `d`.   Actions on `d` are done in place, so call the function using `runDeriveExpr(d, derv object)` and not by running `d <- runDeriveExpr(d, derv object)`.
-##' See [this](http://hbiostat.org/rflow/manip.html#sec-manip-recexp) for an example.
+##' See [this](https://hbiostat.org/rflow/manip.html#sec-manip-recexp/) for an example.
 ##' @title runDeriveExpr
 ##' @param d a data table
 ##' @param derv a `list` of expressions to evaluate
@@ -1522,4 +1609,5 @@ utils::globalVariables(c('.captions.', 'Check', 'Values', 'variable', 'type',
                        '.fs.', '..use', '..vmiss', '.naclus.', '.seqmisstab.',
                        '.combplotp.', 'misschkanova.', 'misschkfit.',
                        'dsname', '.iscplot.', '.idscplot.', '.varclus.',
-                       '.varclus.gg.', '..v', '..use', '..vmiss'))
+                       '.varclus.gg.', '..v', '..use', '..vmiss',
+                       '.start.time'))
