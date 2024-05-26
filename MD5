@@ -1,9 +1,9 @@
-eae919d5c42dddab390c91f12b970ab8 *DESCRIPTION
+b36e8a2c90b6fb7331af54b3971594dd *DESCRIPTION
 5673459a4e54968081e9d9022bb6b38c *NAMESPACE
-2965883075aa85d1d2700be7a46cfe5c *NEWS
+4dd5c6e1b4c0603685c1c1f272dd0b74 *NEWS
 1cc3a706ed3ba106aefe5a22a89a0c15 *R/aePlot.r
-c72f1702bb336f98a4b0dc5024bd427a *R/misc.r
-753ea9ad4533849951fd975ba50c531b *R/reptools.r
+55fc6e9e27c40c325ed43f017b49fbac *R/misc.r
+78667d7f86b39ee7dd619d977a6c61ea *R/reptools.r
 12333ec9fc3558e49199512e18abe4e2 *README.md
 439cb13d4f0665149a196c5e0ecbb622 *man/addCap.Rd
 bf411bf8abc929ec1b60caa52e0380ba *man/aePlot.Rd
@@ -37,7 +37,7 @@ ae7d3f4bbac3d66d10cb43f997370290 *man/putQcap.Rd
 f40f3004ea2db1be2782c5430fb84adb *man/sampleFrac.Rd
 e2855995f4979fc8713b1c2ac543e318 *man/saveCap.Rd
 2b34fec368a44e936736291588b554d9 *man/scplot.Rd
-d0f4b95f7d94fc666cdf8fff7798c635 *man/setqreportOption.Rd
+fa1a802ca3929203bacabe42fee9e223 *man/setqreportOption.Rd
 88fb22072c8d11bd844170180d6ec49f *man/spar.Rd
 cac3d99dee002cc2e4c2f5b414f95ac9 *man/timeMar.Rd
 dff23bc4c6814e014418d91fb22ec0e8 *man/vClus.Rd

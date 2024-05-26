@@ -1,8 +1,8 @@
 Package: qreport
 Type: Package
 Title: Statistical Reporting with 'Quarto'
-Version: 1.0-0
-Date: 2023-09-12
+Version: 1.0-1
+Date: 2024-05-26
 Author: Frank Harrell
 Maintainer: Frank Harrell <fh@fharrell.com>
 Description: Provides statistical components, tables, and graphs
@@ -18,8 +18,8 @@ License: GPL (>= 2)
 Encoding: UTF-8
 LazyLoad: Yes
 URL: https://hbiostat.org/R/qreport/
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 NeedsCompilation: no
-Packaged: 2023-09-12 15:23:06 UTC; harrelfe
+Packaged: 2024-05-26 17:28:16 UTC; harrelfe
 Repository: CRAN
-Date/Publication: 2023-09-12 22:10:02 UTC
+Date/Publication: 2024-05-26 21:50:03 UTC
