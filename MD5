@@ -1,9 +1,10 @@
-b36e8a2c90b6fb7331af54b3971594dd *DESCRIPTION
+0461fc7bfa038a4d74aed5e73ba132f9 *DESCRIPTION
 5673459a4e54968081e9d9022bb6b38c *NAMESPACE
-4dd5c6e1b4c0603685c1c1f272dd0b74 *NEWS
+9c7e75b525c17fc43f0071cd8b1c5d36 *NEWS
 1cc3a706ed3ba106aefe5a22a89a0c15 *R/aePlot.r
+4bfb26b71432b998e8647cba7bd0b2f3 *R/makegvflow.r
 55fc6e9e27c40c325ed43f017b49fbac *R/misc.r
-78667d7f86b39ee7dd619d977a6c61ea *R/reptools.r
+37aa012f7cf6fa13bb2c776e96403420 *R/reptools.r
 12333ec9fc3558e49199512e18abe4e2 *README.md
 439cb13d4f0665149a196c5e0ecbb622 *man/addCap.Rd
 bf411bf8abc929ec1b60caa52e0380ba *man/aePlot.Rd
@@ -25,9 +26,10 @@ be7e1fcc2a3ed00e3951fbf5da07d5c6 *man/htmlViewx.Rd
 1ddc1ea0b336137ab3a7868cf8e5583b *man/makecodechunk.Rd
 099546cb45519b6ba96a038488ffa738 *man/makecolmarg.Rd
 6b8ea9eb8d528f60913758d5846cfa77 *man/makegraphviz.Rd
+8d13276048a971bc67679451fd908f83 *man/makegvflow.Rd
 93347f2a49311fe5ad493d6257c5faaf *man/makemermaid.Rd
 3e2a7c2f085f58756b0e31de3e70688c *man/maketabs.Rd
-06f0c9f7100788aad396c2e6f088562f *man/missChk.Rd
+896a54019c7571b5b0eddeb4ad3266cd *man/missChk.Rd
 c2117eb94345a15fc97af4c47c47a257 *man/multDataOverview.Rd
 b6c0a7c5db0a7f9f0a7d3395da6a99be *man/pdumpit.Rd
 1269f40254b505762c80924fc9095efe *man/printCap.Rd

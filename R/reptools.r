@@ -557,7 +557,7 @@ scplot <- function(command, cap=NULL, scap=NULL, w=5, h=4, id=NULL) {
 ##' @param prednmiss set to `TRUE` to use ordinal regression to predict the number of missing variables on an observation from the values of all the non-missing variables
 ##' @param omitpred a formula or character vector specifying a list of predictors not to use when predicting number of missing variables
 ##' @param baselabel base label for Quarto tabs made with [qreport::maketabs()]
-##' @param ... passed to [combplotp()]
+##' @param ... passed to [Hmisc::combplotp()]
 ##' @return nothing; outputs Quarto/RMarkdown text and tabs for a full report section
 ##' @author Frank Harrell
 ##' @md
@@ -577,7 +577,9 @@ missChk <- function(data, use=NULL, exclude=NULL,
   namedata <- deparse(substitute(data))
   prtype <- .Options$prType
   
-  
+  # db <- function(x) cat(substitute(x), file='/tmp/z', append=TRUE)
+  db <- function(x) {}
+
   d    <- copy(data)
   setDT(d)
   if(length(use)) {
@@ -596,12 +598,16 @@ missChk <- function(data, use=NULL, exclude=NULL,
     if(is.character(x) | is.factor(x))
       is.na(x) | trimws(x) == '' else is.na(x)
 
+  db('a')
+
   ## Replace each variable with missingness indicator
   di <- d[, lapply(.SD, ismiss)]
+  db('b')
   
   ## Hierarchical exclusions
 
   exc <- do.call('seqFreq', c(di, list(noneNA=TRUE)))
+  db('c')
   if(type == 'seq') return(exc)
 
   na.per.var <- apply(di, 2, sum)
@@ -630,6 +636,7 @@ missChk <- function(data, use=NULL, exclude=NULL,
               ' complete) and ', ncol(d), ' variables (', sum(na.per.var == 0),
               ' complete)\n', sep='')
   
+  db('d')
   if(sum(na.per.var) > 0) {
     z <- data.frame(Minimum=c(min(na.per.var), min(na.per.obs)),
                     Maximum=c(max(na.per.var), max(na.per.obs)),
@@ -643,9 +650,11 @@ missChk <- function(data, use=NULL, exclude=NULL,
     tab <- table(na.per.obs)
     print(kabl(tab,
                caption='Frequency distribution of number of incomplete variables per observation'))
+  db('e')
   }
   
   if(pm < max(20, maxpat)) {
+  db('f')
     nap <- na.pattern(dm)
     nap <- matrix(nap, ncol=1, dimnames=list(names(nap), 'Count'))
     n1  <- sum(nap[,1] == 1)
@@ -670,6 +679,7 @@ missChk <- function(data, use=NULL, exclude=NULL,
     }
   }
 
+db('g')
   ge <- .GlobalEnv
   .naclus. <- naclus(dm)
   assign('.naclus.', .naclus., envir=ge)
@@ -688,6 +698,7 @@ missChk <- function(data, use=NULL, exclude=NULL,
                                paste0(', "', baselabel, '"'),
                              ')')
     lab <- surrq(ptypes[i])
+  db('h')
     f <- if(i < 5) paste0(lab, ' ~ ',
                           'naplot(.naclus., which="', names(ptypes[i]),
                           '")', cap)
@@ -703,10 +714,13 @@ missChk <- function(data, use=NULL, exclude=NULL,
   tabs <- c(tabs, Sequential ~
                     kabl(.seqmisstab.,
                          caption='Sequential frequency-ordered exclusions due to NAs'))
+  db('i')
   dm <- dm[, lapply(.SD, is.na)]
   ## Produce combination plot for the right number of variables with NAs
   if(pm <= maxcomb) {
+    db('j')
     .combplotp. <- do.call('combplotp', c(list(data=dm, maxcomb=maxcomb), cargs))
+  db('j')
     assign('.combplotp.', .combplotp., envir=ge)
      tabs <- c(tabs,
                `NA combinations` ~ .combplotp.)
@@ -724,10 +738,14 @@ missChk <- function(data, use=NULL, exclude=NULL,
       preds <- setdiff(preds, omitv)
       }
     form <- paste('na.per.obs ~', paste(preds, collapse=' + '))
+  db('k')
+  saveRDS(list(form=form, d=d, na.per.obs=na.per.obs), '/tmp/w.rds')
     f <- rms::lrm(as.formula(form), data=d)
+  db('l')
     if(f$fail)
       cat('prednmiss=TRUE led to failure of ordinal model to fit\n\n')
     else {
+  db('m')
       assign('.misschkanova.', anova(f), envir=ge)
       assign('.misschkfit.',   f,        envir=ge)
       options(prType='html')
@@ -737,6 +755,7 @@ missChk <- function(data, use=NULL, exclude=NULL,
                                              plot(.misschkanova.))
       }
   }
+db('n')
 
   do.call(maketabs, c(list(initblank=TRUE, baselabel=baselabel),
                       list(tabs)))
