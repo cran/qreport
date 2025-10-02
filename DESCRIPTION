@@ -1,13 +1,12 @@
 Package: qreport
 Type: Package
 Title: Statistical Reporting with 'Quarto'
-Version: 1.0-2
-Date: 2025-04-11
-Authors@R: person(given = "Frank",
-                    family = "Harrell",
-                    role = c("aut", "cre"),
-                    email = "fh@fharrell.com")
-Maintainer: Frank Harrell <fh@fharrell.com>
+Version: 1.1-0
+Date: 2025-09-30
+Authors@R: person(given = "Frank E",
+                  family = "Harrell Jr",
+                  role = c("aut", "cre"),
+                  email = "fh@fharrell.com")
 Description: Provides statistical components, tables, and graphs
     that are useful in 'Quarto' and 'RMarkdown' reports and that produce 'Quarto'
     elements for special formatting such as tabs and marginal notes and graphs.
@@ -15,16 +14,17 @@ Description: Provides statistical components, tables, and graphs
     the missing data report created by missChk().  Functions for inserting
 		variables and tables inside 'graphviz' and 'mermaid' diagrams are included,
 		and so are special clinical trial graphics for adverse event reporting.
-Depends: Hmisc (>= 5.1-1), data.table, ggplot2
-Imports: rms, Formula, viridis, knitr, htmltools
+Depends: Hmisc (>= 5.1-1), ggplot2
+Imports: rms, Formula, viridis, knitr, htmltools, data.table
 Suggests: tth
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyLoad: Yes
 URL: https://hbiostat.org/R/qreport/
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2025-04-11 23:23:06 UTC; harrelfe
-Author: Frank Harrell [aut, cre]
+Packaged: 2025-10-02 13:07:27 UTC; harrelfe
+Author: Frank E Harrell Jr [aut, cre]
+Maintainer: Frank E Harrell Jr <fh@fharrell.com>
 Repository: CRAN
-Date/Publication: 2025-04-12 00:00:02 UTC
+Date/Publication: 2025-10-02 13:50:02 UTC
